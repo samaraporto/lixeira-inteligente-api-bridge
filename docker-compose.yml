@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto-broker
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./config:/mosquitto/config
+  api-telegram:
+    container_name: api-telegram
+    restart: unless-stopped
+    build: .
+    env_file:
+      - ./.env
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - mosquitto
